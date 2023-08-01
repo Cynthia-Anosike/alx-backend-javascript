@@ -1,20 +1,42 @@
-// Imagine we have a function that returns a Promise to simulate an asynchronous operation.
-function fetchData() {
-  return new Promise((resolve, reject) => {
-    // Simulate a delayed response (e.g., fetching data from a server).
-    setTimeout(() => {
-      const data = { message: "Hello, Promises!" };
-      resolve(data); // The Promise is fulfilled with the data.
-      // If there was an error, you can reject the Promise: reject("Error occurred!");
-    }, 2000); // Simulating a 2-second delay.
-  });
-}
+function getFullResponseFromAPI(success) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if(success) {
+          const data = {
+            status: 200,
+            body: 'success',
+          };
+          resolve(data);
+        } else {
+            const response = 'A faulty API';
+            reject(response);
+        }
+      }, 2000)
+    }) 
+  }
+  
+getFullResponseFromAPI(true).then((data) => {
+    console.log('API is:', data);
+}).catch((response) => {
+    console.error(`Error: ${response}`);
+})
 
-// Using the fetchData function that returns a Promise.
-fetchData()
-  .then((data) => {
-    console.log(data.message); // Output: "Hello, Promises!"
-  })
-  .catch((error) => {
-    console.error(error); // Handle errors if the Promise is rejected.
-  });
+getFullResponseFromAPI().then((data) => {
+    console.log('API is:', data);
+}).catch((response) => {
+    console.error(`Error: ${response}`);
+})
+
+// Catch me if you can
+function handleResponseFromAPI(promise) {
+    return promise
+    .then(() => ({
+        status: 200,
+        body: 'success',
+    }))
+    .catch(() => Error())
+    .finally(() => console.log('Got a response from API'));
+};
+
+const promise = Promise.resolve();
+handleResponseFromAPI(promise);
